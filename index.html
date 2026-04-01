@@ -256,12 +256,13 @@
       <textarea name="question" placeholder="Describe the behavior, policy, practice, or situation you're asking about." required style="min-height:100px;"></textarea>
 
       <label>Context *</label>
-      <select name="context" required>
+      <select name="context" required onchange="toggleContextOther(this)">
         <option value="">Select context…</option>
         <option>This is hypothetical — I'm thinking through a situation</option>
-        <option>This is actively happening right now</option>
-        <option>A decision is being made and I need guidance</option>
+        <option>This is real and happening — I need guidance</option>
+        <option value="other">Other</option>
       </select>
+      <textarea id="context-other" name="context_other" placeholder="Please describe your context…" style="display:none;margin-top:0.5rem;min-height:70px;"></textarea>
 
       <label>Urgency *</label>
       <select name="urgency" required>
@@ -463,6 +464,11 @@
     document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
     document.querySelectorAll('.faq-chevron').forEach(c => c.style.transform = '');
     if (!isOpen) { ans.classList.add('open'); chev.style.transform = 'rotate(180deg)'; }
+  }
+  function toggleContextOther(sel) {
+    const other = document.getElementById('context-other');
+    other.style.display = sel.value === 'other' ? 'block' : 'none';
+    other.required = sel.value === 'other';
   }
   async function submitCompass(e) {
     e.preventDefault();
