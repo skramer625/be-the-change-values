@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be The Change Values</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Calibri', sans-serif; background: #f5f5f3; color: #333; }
+
+  nav { background: #001E62; position: sticky; top: 0; z-index: 100; }
+  .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; }
+  .nav-logo { color: #fff; font-size: 1.1rem; font-weight: 700; padding: 1rem 0; letter-spacing: 0.5px; }
+  .nav-logo span { color: #F9A21A; }
+  .nav-links { display: flex; }
+  .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; padding: 1.1rem 1rem; font-size: 0.9rem; border-bottom: 3px solid transparent; transition: all 0.2s; cursor: pointer; }
+  .nav-links a:hover, .nav-links a.active { color: #fff; border-bottom-color: #F9A21A; }
+
+  .page { display: none; max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  .page.active { display: block; }
+
+  .hero { background: #001E62; color: white; text-align: center; padding: 3.5rem 1.5rem 3rem; }
+  .hero h1 { font-size: 2.6rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .hero h1 span { color: #F9A21A; }
+  .hero p { font-size: 1.15rem; color: rgba(255,255,255,0.8); max-width: 580px; margin: 0 auto; }
+
+  .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
+  .value-card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .value-card-header { padding: 1.1rem 1.25rem 0.9rem; }
+  .value-name { font-size: 1.2rem; font-weight: 700; color: #fff; }
+  .value-def { font-size: 0.88rem; color: rgba(255,255,255,0.88); margin-top: 0.3rem; line-height: 1.5; }
+  .value-card-body { padding: 1rem 1.25rem 1.25rem; }
+  .value-card-body h4 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 0.6rem; }
+  .value-card-body ul { list-style: none; }
+  .value-card-body ul li { font-size: 0.9rem; color: #444; padding: 0.35rem 0 0.35rem 1rem; border-bottom: 0.5px solid #f0f0f0; line-height: 1.45; position: relative; }
+  .value-card-body ul li:last-child { border-bottom: none; }
+  .value-card-body ul li::before { content: ''; position: absolute; left: 0; top: 0.72rem; width: 5px; height: 5px; border-radius: 50%; }
+
+  .vc-green .value-card-header { background: #C3D52E; }
+  .vc-green .value-card-body ul li::before { background: #C3D52E; }
+  .vc-red .value-card-header { background: #EE3C37; }
+  .vc-red .value-card-body ul li::before { background: #EE3C37; }
+  .vc-blue .value-card-header { background: #001E62; }
+  .vc-blue .value-card-body ul li::before { background: #001E62; }
+  .vc-sky .value-card-header { background: #57C0E9; }
+  .vc-sky .value-card-body ul li::before { background: #57C0E9; }
+  .vc-gold .value-card-header { background: #F9A21A; }
+  .vc-gold .value-card-body ul li::before { background: #F9A21A; }
+
+  .section-title { font-size: 1.6rem; font-weight: 700; color: #001E62; margin-bottom: 0.3rem; }
+  .section-sub { color: #666; font-size: 1rem; margin-bottom: 1.5rem; }
+  .divider { height: 4px; width: 48px; background: #F9A21A; border-radius: 2px; margin: 0.4rem 0 1.5rem; }
+
+  .faq-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+  .faq-item { background: #fff; border-radius: 8px; border: 0.5px solid #e0e0e0; overflow: hidden; }
+  .faq-q { padding: 1rem 1.25rem; font-weight: 600; color: #001E62; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
+  .faq-q:hover { background: #f8f8f8; }
+  .faq-chevron { font-size: 1rem; color: #F9A21A; transition: transform 0.2s; }
+  .faq-a { display: none; padding: 0 1.25rem 1rem; font-size: 0.92rem; color: #444; line-height: 1.6; border-top: 0.5px solid #f0f0f0; }
+  .faq-a.open { display: block; }
+  .value-tag { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 12px; margin-bottom: 0.5rem; margin-top: 0.75rem; color: #fff; }
+  .tag-green { background: #C3D52E; color: #3a4a00; }
+  .tag-red { background: #EE3C37; }
+  .tag-blue { background: #001E62; }
+  .tag-sky { background: #57C0E9; color: #003a52; }
+  .tag-gold { background: #F9A21A; color: #5a3a00; }
+
+  .compass-intro { background: #001E62; color: white; border-radius: 10px; padding: 1.75rem 2rem; margin-bottom: 2rem; }
+  .compass-intro h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: #F9A21A; }
+  .compass-intro p { font-size: 0.95rem; color: rgba(255,255,255,0.85); line-height: 1.6; }
+
+  .recognize-form { background: #fff; border-radius: 10px; padding: 1.75rem 2rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .recognize-form .form-intro { font-size: 0.92rem; color: #555; line-height: 1.6; margin-bottom: 1.5rem; border-left: 4px solid #F9A21A; padding-left: 0.85rem; }
+  .recognize-form label, .form-label { display: block; font-size: 0.85rem; font-weight: 700; color: #001E62; margin-bottom: 0.35rem; margin-top: 1.1rem; }
+  .recognize-form input, .recognize-form select, .recognize-form textarea { width: 100%; padding: 0.55rem 0.75rem; border: 0.5px solid #ccc; border-radius: 6px; font-family: 'Calibri', sans-serif; font-size: 0.92rem; color: #333; background: #fff; }
+  .recognize-form textarea { resize: vertical; min-height: 120px; line-height: 1.55; }
+  .value-radio-group { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6rem; margin-top: 0.4rem; align-items: stretch; }
+  .value-radio-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.4rem; padding: 0.85rem 0.6rem; border: 0.5px solid #ddd; border-radius: 8px; cursor: pointer; transition: background 0.15s, border-color 0.15s; box-sizing: border-box; height: 220px; overflow: auto; margin-top: 0; vertical-align: top; }
+  .value-radio-item:hover { background: #f8f8f8; border-color: #aaa; }
+  .value-radio-item input[type=radio] { accent-color: #001E62; flex-shrink: 0; }
+  .value-radio-item .vr-name { font-weight: 700; font-size: 0.9rem; }
+  .value-radio-item .vr-def { font-size: 0.75rem; color: #666; line-height: 1.4; }
+  .form-note { font-size: 0.82rem; color: #888; margin-top: 1.25rem; font-style: italic; }
+  .submit-btn { margin-top: 1.25rem; background: #001E62; color: #fff; border: none; padding: 0.7rem 2rem; border-radius: 6px; font-family: 'Calibri', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .submit-btn:hover { background: #EE3C37; }
+
+  .filter-bar { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .filter-bar select, .filter-bar input { padding: 0.5rem 0.75rem; border: 0.5px solid #ccc; border-radius: 6px; font-family: 'Calibri', sans-serif; font-size: 0.9rem; color: #333; background: #fff; }
+  .shoutouts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1.5rem; }
+  .shoutout-card { background: #fff; border-radius: 10px; padding: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 4px solid #F9A21A; }
+  .shoutout-card .s-value { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 0.5rem; }
+  .shoutout-card .s-quote { font-size: 0.95rem; color: #333; line-height: 1.55; margin-bottom: 0.75rem; font-style: italic; }
+  .shoutout-card .s-meta { font-size: 0.82rem; color: #888; }
+  .shoutout-card .s-name { font-weight: 700; color: #001E62; }
+  .submit-shoutout-wrap { margin-top: 2.5rem; }
+  .submit-shoutout-wrap h3 { font-size: 1.1rem; color: #001E62; margin-bottom: 0.5rem; font-weight: 700; }
+
+  @media (max-width: 640px) {
+    .nav-links a { padding: 1rem 0.6rem; font-size: 0.8rem; }
+    .hero h1 { font-size: 1.8rem; }
+    .values-grid { grid-template-columns: 1fr; }
+    .value-radio-group { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Be The <span>Change</span></h1>
+  <p>Our values define who we are, how we work, and the culture we build together — every day, for every kid.</p>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Be The <span>Change</span></div>
+    <div class="nav-links">
+      <a class="active" onclick="showPage('values',this)">Our Values</a>
+      <a onclick="showPage('faq',this)">Values FAQ</a>
+      <a onclick="showPage('compass',this)">The Compass</a>
+      <a onclick="showPage('shoutouts',this)">Shoutouts</a>
+    </div>
+  </div>
+</nav>
+
+<!-- VALUES PAGE -->
+<div id="page-values" class="page active">
+  <div class="section-title">Our Values</div>
+  <div class="divider"></div>
+  <p class="section-sub">Five values. One culture. Every decision, every day.</p>
+  <div class="values-grid">
+    <div class="value-card vc-green">
+      <div class="value-card-header">
+        <div class="value-name">Kid Focus</div>
+        <div class="value-def">Promises to kids are sacred. We lead with our students at the center — always.</div>
+      </div>
+      <div class="value-card-body">
+        <h4>Behaviors</h4>
+        <ul>
+          <li>Champion our kids, mission, and values.</li>
+          <li>Put students first every day, in every decision.</li>
+          <li>Prioritize our kids' long-term interests over short-term wins.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="value-card vc-red">
+      <div class="value-card-header">
+        <div class="value-name">Radical Love</div>
+        <div class="value-def">Fierce care, bold belief, and high expectations that nurture our communities' full humanity and drive transformational change.</div>
+      </div>
+      <div class="value-card-body">
+        <h4>Behaviors</h4>
+        <ul>
+          <li>Affirm the worth and limitless potential of every student and teammate.</li>
+          <li>Celebrate identity, culture, and community as sources of strength and pride.</li>
+          <li>Challenge inequities and behavior inconsistent with our values.</li>
+          <li>Act courageously, especially when it's uncomfortable.</li>
+          <li>Find a way or make one — radical love demands initiative and ownership.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="value-card vc-blue">
+      <div class="value-card-header">
+        <div class="value-name">Excellence</div>
+        <div class="value-def">We seek continuous improvement in pursuit of the highest standards, with unwavering integrity to deliver outstanding results.</div>
+      </div>
+      <div class="value-card-body">
+        <h4>Behaviors</h4>
+        <ul>
+          <li>Hold yourself and others accountable to the urgent pursuit of results.</li>
+          <li>Self-reflect and seek opportunities to get better faster.</li>
+          <li>Develop solutions that yield strong outcomes.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="value-card vc-sky">
+      <div class="value-card-header">
+        <div class="value-name">TEAM</div>
+        <div class="value-def">Together Everyone Achieves More. Trusting relationships and collaboration are the best way to get results for kids.</div>
+      </div>
+      <div class="value-card-body">
+        <h4>Behaviors</h4>
+        <ul>
+          <li>Be open-minded and assume the best.</li>
+          <li>Invite and honor diverse perspectives to strengthen our decisions.</li>
+          <li>Say the thing that needs to be said — directly and with care.</li>
+          <li>Give your full and frank input, then rally behind the decision.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="value-card vc-gold">
+      <div class="value-card-header">
+        <div class="value-name">Fun</div>
+        <div class="value-def">Joyful culture, serious mission.</div>
+      </div>
+      <div class="value-card-body">
+        <h4>Behaviors</h4>
+        <ul>
+          <li>Take the work seriously, not ourselves.</li>
+          <li>Celebrate progress and wins big and small.</li>
+          <li>Express optimism and gratitude.</li>
+          <li>Bring energy, enthusiasm, humor, and passion to the work.</li>
+          <li>Create and contribute to engaging learning and community experiences.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ PAGE -->
+<div id="page-faq" class="page">
+  <div class="section-title">Values FAQ</div>
+  <div class="divider"></div>
+  <p class="section-sub">Real questions. Clear answers. This page grows as our community asks — and we answer together.</p>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Does Kid Focus mean we ignore what adults — staff, families, leaders — need? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a"><span class="value-tag tag-green">Kid Focus</span><br>No — and this is an important distinction. Kid Focus doesn't mean adults don't matter; it means that when we're making decisions, the question we return to is: what serves kids best? Supporting staff well, building strong family relationships, and developing strong leaders are all in service of that goal. Kid Focus is the lens, not a hierarchy that dismisses everyone else.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do you hold someone accountable and still lead with Radical Love? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a"><span class="value-tag tag-red">Radical Love</span><br>Radical Love and accountability aren't opposites — they're interdependent. Holding someone to a high standard is an act of belief in their potential. The behavior asks us to "affirm the worth and limitless potential of every teammate," and sometimes that means saying directly: this isn't your best work, and I know you're capable of more. What Radical Love rules out is accountability delivered with contempt, indifference, or cruelty — not accountability itself.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Does "rally behind the decision" mean I can't keep raising concerns? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a"><span class="value-tag tag-sky">TEAM</span><br>Rallying behind a decision means executing with commitment — not silence. If new information emerges, or if implementation reveals a problem, you should raise it. The behavior asks you not to undermine a decision while it's being executed, but it doesn't ask you to stop thinking critically or stop advocating for kids.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is it okay to not be a naturally "fun" person and still live this value? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a"><span class="value-tag tag-gold">Fun</span><br>Absolutely. Fun isn't a personality type — it's a set of choices. The behaviors under this value are about expressing optimism and gratitude, celebrating progress, and bringing energy and enthusiasm to the work. None of those require you to be the loudest person in the room or to crack jokes in every meeting. A quiet teammate who consistently lifts others up, notices wins, and approaches hard work with genuine care is living Fun just as fully as someone more outwardly expressive.</div>
+    </div>
+  </div>
+  <div style="margin-top:2rem;padding:1.25rem;background:#fff;border-radius:8px;border-left:4px solid #F9A21A;">
+    <strong style="color:#001E62;display:block;margin-bottom:0.35rem;">Don't see your question here?</strong>
+    <span style="font-size:0.92rem;color:#555;">Submit it through <a href="#" onclick="showPage('compass',document.querySelectorAll('.nav-links a')[2]);return false;" style="color:#EE3C37;font-weight:600;">The Compass</a> and we'll work on an answer together.</span>
+  </div>
+</div>
+
+<!-- COMPASS PAGE -->
+<div id="page-compass" class="page">
+  <div class="section-title">The Compass</div>
+  <div class="divider"></div>
+  <div class="compass-intro">
+    <h3>Is this values-aligned?</h3>
+    <p>The Compass is a space to ask honest questions about our values and culture — without judgment. Whether you're facing a real decision, noticing something that doesn't feel right, or just curious how a value applies in your context, submit your question below. Submissions are reviewed and routed to the right team for discussion, and answers are posted to the Values FAQ so the whole org can benefit.</p>
+  </div>
+
+  <div class="recognize-form" id="compass-form-wrap">
+    <div id="compass-success" style="display:none;text-align:center;padding:2rem;">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">✓</div>
+      <strong style="color:#001E62;font-size:1.1rem;display:block;margin-bottom:0.5rem;">Your question has been submitted.</strong>
+      <p style="color:#555;font-size:0.92rem;">Your submission will be reviewed and you'll hear back within two weeks. If it has broad relevance, the answer will be added to the Values FAQ.</p>
+      <button class="submit-btn" style="margin-top:1.25rem;" onclick="document.getElementById('compass-success').style.display='none';document.getElementById('compass-form').style.display='block';">Submit another question</button>
+    </div>
+    <form id="compass-form" onsubmit="submitCompass(event)">
+      <label>Your question or scenario *</label>
+      <textarea name="question" placeholder="Describe the behavior, policy, practice, or situation you're asking about." required style="min-height:100px;"></textarea>
+
+      <label>Context *</label>
+      <select name="context" required>
+        <option value="">Select context…</option>
+        <option>This is hypothetical — I'm thinking through a situation</option>
+        <option>This is actively happening right now</option>
+        <option>A decision is being made and I need guidance</option>
+      </select>
+
+      <label>Urgency *</label>
+      <select name="urgency" required>
+        <option value="">Select urgency…</option>
+        <option>Within a week — this is time-sensitive</option>
+        <option>Within a month</option>
+        <option>No hard deadline</option>
+      </select>
+
+      <label>Your name *</label>
+      <input type="text" name="name" placeholder="Your full name" required>
+
+      <label>Your team or school *</label>
+      <select name="team" required>
+        <option value="">Select a school or department…</option>
+        <optgroup label="Schools">
+          <option>KIPP BOLD Academy</option>
+          <option>KIPP Cooper Norcross High</option>
+          <option>KIPP Courage Academy</option>
+          <option>KIPP Hatch Middle</option>
+          <option>KIPP Justice Academy</option>
+          <option>KIPP Lanning Square Middle</option>
+          <option>KIPP Lanning Square Primary</option>
+          <option>KIPP Legacy Elementary School</option>
+          <option>KIPP Legacy Middle School</option>
+          <option>KIPP Life Academy</option>
+          <option>KIPP Miami Technical High</option>
+          <option>KIPP Newark Collegiate Academy</option>
+          <option>KIPP Newark Lab High School</option>
+          <option>KIPP Paterson Prep Elementary</option>
+          <option>KIPP Paterson Prep Middle</option>
+          <option>KIPP Purpose Academy</option>
+          <option>KIPP Rise Academy</option>
+          <option>KIPP Royalty Academy</option>
+          <option>KIPP Seek Academy</option>
+          <option>KIPP SPARK Academy</option>
+          <option>KIPP Sumner Elementary</option>
+          <option>KIPP TEAM Academy</option>
+          <option>KIPP THRIVE Academy</option>
+          <option>KIPP Upper Roseville Academy</option>
+        </optgroup>
+        <optgroup label="Regional &amp; Central">
+          <option>KTAF &amp; Regional Teammates</option>
+        </optgroup>
+      </select>
+
+      <p class="form-note">Your submission will be reviewed before a response is shared.</p>
+      <button type="submit" class="submit-btn" id="compass-submit-btn">Submit Question</button>
+    </form>
+  </div>
+
+  <div style="margin-top:2rem;background:#fff;border-radius:8px;padding:1.25rem 1.5rem;border:0.5px solid #e0e0e0;">
+    <strong style="color:#001E62;font-size:0.95rem;">What happens after you submit?</strong>
+    <ol style="margin-top:0.75rem;padding-left:1.25rem;font-size:0.9rem;color:#555;line-height:1.8;">
+      <li>Your submission is reviewed within the week.</li>
+      <li>It's routed to TC or the right functional team for discussion.</li>
+      <li>You'll receive a response within two weeks (urgent questions faster).</li>
+      <li>Answers with broad applicability are added to the Values FAQ above.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- SHOUTOUTS PAGE -->
+<div id="page-shoutouts" class="page">
+  <div class="section-title">Values Shoutouts</div>
+  <div class="divider"></div>
+  <p class="section-sub">Spotlighting teammates who bring our values to life.</p>
+
+  <div class="filter-bar">
+    <select><option value="">All Values</option><option>Kid Focus</option><option>Radical Love</option><option>Excellence</option><option>TEAM</option><option>Fun</option></select>
+    <select>
+      <option value="">All Schools &amp; Departments</option>
+      <optgroup label="Schools">
+        <option>KIPP BOLD Academy</option>
+        <option>KIPP Cooper Norcross High</option>
+        <option>KIPP Courage Academy</option>
+        <option>KIPP Hatch Middle</option>
+        <option>KIPP Justice Academy</option>
+        <option>KIPP Lanning Square Middle</option>
+        <option>KIPP Lanning Square Primary</option>
+        <option>KIPP Legacy Elementary School</option>
+        <option>KIPP Legacy Middle School</option>
+        <option>KIPP Life Academy</option>
+        <option>KIPP Miami Technical High</option>
+        <option>KIPP Newark Collegiate Academy</option>
+        <option>KIPP Newark Lab High School</option>
+        <option>KIPP Paterson Prep Elementary</option>
+        <option>KIPP Paterson Prep Middle</option>
+        <option>KIPP Purpose Academy</option>
+        <option>KIPP Rise Academy</option>
+        <option>KIPP Royalty Academy</option>
+        <option>KIPP Seek Academy</option>
+        <option>KIPP SPARK Academy</option>
+        <option>KIPP Sumner Elementary</option>
+        <option>KIPP TEAM Academy</option>
+        <option>KIPP THRIVE Academy</option>
+        <option>KIPP Upper Roseville Academy</option>
+      </optgroup>
+      <optgroup label="Regional &amp; Central">
+        <option>KTAF &amp; Regional Teammates</option>
+      </optgroup>
+    </select>
+    <input type="text" placeholder="Search by person..." style="max-width:220px;">
+  </div>
+
+  <div class="shoutouts-grid">
+    <div class="shoutout-card" style="border-top-color:#EE3C37;">
+      <div class="s-value" style="color:#EE3C37;">Radical Love</div>
+      <div class="s-quote">"When a student was struggling in silence, she didn't wait to be asked — she showed up, stayed late, and made sure that kid knew someone believed in them."</div>
+      <div class="s-meta">Shoutout to <span class="s-name">Sample Teammate</span> · Student Support</div>
+    </div>
+    <div class="shoutout-card" style="border-top-color:#C3D52E;">
+      <div class="s-value" style="color:#6B8A00;">Kid Focus</div>
+      <div class="s-quote">"In every budget conversation, he kept redirecting us back to the question: what does this mean for kids? It changed the entire outcome of the meeting."</div>
+      <div class="s-meta">Shoutout to <span class="s-name">Sample Teammate</span> · Finance</div>
+    </div>
+    <div class="shoutout-card" style="border-top-color:#57C0E9;">
+      <div class="s-value" style="color:#2A93BE;">TEAM</div>
+      <div class="s-quote">"She disagreed with the direction in the room, said so clearly and directly, and then turned around and executed it better than anyone. That's what TEAM looks like."</div>
+      <div class="s-meta">Shoutout to <span class="s-name">Sample Teammate</span> · School Leadership</div>
+    </div>
+  </div>
+
+  <div class="submit-shoutout-wrap">
+    <h3>Recognize a Teammate</h3>
+    <div class="recognize-form">
+      <p class="form-intro">The best recognitions are specific — name what happened, what they chose to do, and why it mattered.</p>
+
+      <p class="form-label">Which value did they demonstrate?</p>
+      <div class="value-radio-group">
+        <div class="value-radio-item" style="border-top:4px solid #C3D52E;"><input type="radio" name="value" value="Kid Focus"><div class="vr-name" style="color:#C3D52E;">Kid Focus</div><div class="vr-def">Promises to kids are sacred. We lead with our students at the center — always.</div></div>
+        <div class="value-radio-item" style="border-top:4px solid #EE3C37;"><input type="radio" name="value" value="Radical Love"><div class="vr-name" style="color:#EE3C37;">Radical Love</div><div class="vr-def">We approach our work with fierce care, bold belief, and high expectations that nurture our communities' full humanity.</div></div>
+        <div class="value-radio-item" style="border-top:4px solid #001E62;"><input type="radio" name="value" value="Excellence"><div class="vr-name" style="color:#001E62;">Excellence</div><div class="vr-def">We seek continuous improvement in pursuit of the highest standards, with unwavering integrity.</div></div>
+        <div class="value-radio-item" style="border-top:4px solid #57C0E9;"><input type="radio" name="value" value="TEAM"><div class="vr-name" style="color:#57C0E9;">TEAM</div><div class="vr-def">Trusting relationships and collaboration across students, families, communities, and teammates are the best way to get results for kids.</div></div>
+        <div class="value-radio-item" style="border-top:4px solid #F9A21A;"><input type="radio" name="value" value="Fun"><div class="vr-name" style="color:#F9A21A;">Fun</div><div class="vr-def">Joyful culture, serious mission.</div></div>
+      </div>
+
+      <label>Who are you recognizing? *</label>
+      <input type="text" placeholder="Teammate's name">
+
+      <label>Your name *</label>
+      <input type="text" placeholder="Your name">
+
+      <label>Their School or Department *</label>
+      <select>
+        <option value="">Select a school or department…</option>
+        <optgroup label="Schools">
+          <option>KIPP BOLD Academy</option>
+          <option>KIPP Cooper Norcross High</option>
+          <option>KIPP Courage Academy</option>
+          <option>KIPP Hatch Middle</option>
+          <option>KIPP Justice Academy</option>
+          <option>KIPP Lanning Square Middle</option>
+          <option>KIPP Lanning Square Primary</option>
+          <option>KIPP Legacy Elementary School</option>
+          <option>KIPP Legacy Middle School</option>
+          <option>KIPP Life Academy</option>
+          <option>KIPP Miami Technical High</option>
+          <option>KIPP Newark Collegiate Academy</option>
+          <option>KIPP Newark Lab High School</option>
+          <option>KIPP Paterson Prep Elementary</option>
+          <option>KIPP Paterson Prep Middle</option>
+          <option>KIPP Purpose Academy</option>
+          <option>KIPP Rise Academy</option>
+          <option>KIPP Royalty Academy</option>
+          <option>KIPP Seek Academy</option>
+          <option>KIPP SPARK Academy</option>
+          <option>KIPP Sumner Elementary</option>
+          <option>KIPP TEAM Academy</option>
+          <option>KIPP THRIVE Academy</option>
+          <option>KIPP Upper Roseville Academy</option>
+        </optgroup>
+        <optgroup label="Regional &amp; Central">
+          <option>KTAF &amp; Regional Teammates</option>
+        </optgroup>
+      </select>
+
+      <label>Tell their story *</label>
+      <textarea placeholder="What did they do? What was the situation, what choice did they make, and what difference did it make? The more real and specific, the more powerful it is."></textarea>
+
+      <p class="form-note">Your story will be reviewed before publishing.</p>
+      <button class="submit-btn">Submit Shoutout</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (el) el.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function toggleFaq(el) {
+    const ans = el.nextElementSibling;
+    const chev = el.querySelector('.faq-chevron');
+    const isOpen = ans.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-chevron').forEach(c => c.style.transform = '');
+    if (!isOpen) { ans.classList.add('open'); chev.style.transform = 'rotate(180deg)'; }
+  }
+  async function submitCompass(e) {
+    e.preventDefault();
+    const btn = document.getElementById('compass-submit-btn');
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+    const form = document.getElementById('compass-form');
+    const params = new URLSearchParams({
+      question: form.question.value,
+      context: form.context.value,
+      urgency: form.urgency.value,
+      name: form.name.value,
+      team: form.team.value,
+      timestamp: new Date().toISOString()
+    });
+    try {
+      await fetch('https://hooks.zapier.com/hooks/catch/27059655/une504o/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString(),
+        mode: 'no-cors'
+      });
+      form.style.display = 'none';
+      document.getElementById('compass-success').style.display = 'block';
+    } catch(err) {
+      btn.textContent = 'Submit Question';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again.');
+    }
+  }
+</script>
+</body>
+</html>
